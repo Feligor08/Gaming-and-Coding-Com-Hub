@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felix & Jasmin — Ewig Dein</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --heart-red: #ff4d6d;
+            --heart-pink: #ff75c3;
+            --gold: #ffca3a;
+            --white: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #1a0505 0%, #4a0e0e 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background: var(--bg-gradient);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+        }
+
+        /* Background Particle Effect */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* Central Heart */
+        .heart-wrapper {
+            position: relative;
+            width: 300px;
+            height: 260px;
+            filter: drop-shadow(0 0 30px rgba(255, 77, 109, 0.6));
+            animation: heartbeat 1.5s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .heart-wrapper:hover {
+            transform: scale(1.1);
+        }
+
+        .heart {
+            background-color: var(--heart-red);
+            display: inline-block;
+            height: 200px;
+            position: relative;
+            top: 0;
+            transform: rotate(-45deg);
+            width: 200px;
+        }
+
+        .heart:before,
+        .heart:after {
+            background-color: var(--heart-red);
+            border-radius: 50%;
+            content: "";
+            height: 200px;
+            position: absolute;
+            width: 200px;
+        }
+
+        .heart:before {
+            top: -100px;
+            left: 0;
+        }
+
+        .heart:after {
+            left: 100px;
+            top: 0;
+        }
+
+        /* Text inside Heart */
+        .heart-content {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 11;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .names {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.8rem;
+            color: var(--white);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 5px;
+        }
+
+        .date {
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animations */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+
+        /* Compliment Styles */
+        .compliment {
+            position: absolute;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            animation: float-around 8s linear forwards;
+            font-family: 'Dancing Script', cursive;
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 117, 195, 0.8);
+        }
+
+        @keyframes float-around {
+            0% {
+                transform: translate(var(--start-x), var(--start-y)) scale(0.5);
+                opacity: 0;
+            }
+            15% {
+                opacity: 0.8;
+            }
+            85% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Back Button */
+        .btn-back {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 77, 109, 0.3);
+            border-color: var(--heart-red);
+            padding: 12px 35px;
+        }
+
+        .btn-back::before {
+            content: '← ';
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+
+    <div class="container">
+        <div class="heart-wrapper">
+            <div class="heart"></div>
+            <div class="heart-content">
+                <div class="names">Felix&Jasmin</div>
+                <div class="date">01.01.2026</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="btn-back">Zurück / Back</a>
+
+    <script>
+        const compliments = [
+            'Du bist mein Ein und Alles',
+            'Ewig Dein',
+            'Mein Schatz',
+            'Unzertrennlich',
+            'Liebe meines Lebens',
+            'Du bist wunderschön',
+            'Für immer Wir',
+            'Seelenverwandte',
+            'In Liebe',
+            'Du machst mich glücklich',
+            'Mein Herz gehört Dir',
+            'Gesucht und gefunden'
+        ];
+
+        const allCompliments = [...compliments];
+        const container = document.body;
+
+        function createCompliment() {
+            const el = document.createElement('div');
+            el.className = 'compliment';
+            el.textContent = allCompliments[Math.floor(Math.random() * allCompliments.length)];
+            
+            // Random properties
+            const size = 1 + Math.random() * 1.5;
+            const duration = 10 + Math.random() * 10;
+            
+            // Random start and end positions around the center
+            const angle = Math.random() * Math.PI * 2;
+            const distanceStart = 150 + Math.random() * 100;
+            const distanceEnd = 300 + Math.random() * 200;
+            
+            const startX = Math.cos(angle) * distanceStart;
+            const startY = Math.sin(angle) * distanceStart;
+            const endX = Math.cos(angle + (Math.random() - 0.5)) * distanceEnd;
+            const endY = Math.sin(angle + (Math.random() - 0.5)) * distanceEnd;
+
+            el.style.setProperty('--start-x', `${startX}px`);
+            el.style.setProperty('--start-y', `${startY}px`);
+            el.style.setProperty('--end-x', `${endX}px`);
+            el.style.setProperty('--end-y', `${endY}px`);
+            el.style.fontSize = `${size}rem`;
+            el.style.animationDuration = `${duration}s`;
+            
+            // Center absolute positioning
+            el.style.left = '50%';
+            el.style.top = '50%';
+
+            container.appendChild(el);
+
+            setTimeout(() => {
+                el.remove();
+            }, duration * 1000);
+        }
+
+        // Particle System
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 3 + 1,
+                    speedX: (Math.random() - 0.5) * 1,
+                    speedY: (Math.random() - 0.5) * 1,
+                    opacity: Math.random(),
+                    color: Math.random() > 0.5 ? '#ff4d6d' : '#ffffff'
+                });
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.speedX;
+                p.y += p.speedY;
+                
+                if(p.x < 0) p.x = canvas.width;
+                if(p.x > canvas.width) p.x = 0;
+                if(p.y < 0) p.y = canvas.height;
+                if(p.y > canvas.height) p.y = 0;
+
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.opacity;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', initParticles);
+        initParticles();
+        animateParticles();
+
+        // Spawn compliments
+        setInterval(createCompliment, 1200);
+        for(let i=0; i<8; i++) setTimeout(createCompliment, i * 500);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEZAcademy — Sheets Hub</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Dancing+Script:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../css/global.css">
+    <style>
+        .main-content { padding-top: 100px; }
+        .hero-section { text-align: center; margin-bottom: 60px; }
+        .hero-title { 
+            font-family: "Orbitron", sans-serif; 
+            font-size: clamp(2rem, 5vw, 3.5rem); 
+            font-weight: 900; 
+            background: linear-gradient(to right, #fff, var(--neon-cyan), #ff75c3); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            margin-bottom: 20px; 
+        }
+        .sheets-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            margin-top: 40px;
+        }
+        .sheet-card {
+            position: relative;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .sheet-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: #ff4d6d;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2);
+        }
+        .sheet-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.5));
+        }
+        .sheet-card h3 {
+            font-family: "Orbitron", sans-serif;
+            margin-bottom: 12px;
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        .sheet-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .card-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .view-btn {
+            background: rgba(255, 77, 109, 0.2);
+            border: 1px solid rgba(255, 77, 109, 0.4);
+            color: #ff75c3;
+        }
+        .view-btn:hover {
+            background: rgba(255, 77, 109, 0.4);
+            color: #fff;
+        }
+        .copy-btn {
+            background: rgba(0, 245, 255, 0.1);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            color: var(--neon-cyan);
+        }
+        .copy-btn:hover {
+            background: rgba(0, 245, 255, 0.3);
+            color: #fff;
+        }
+        .back-nav {
+            margin-top: 50px;
+            text-align: center;
+        }
+        
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 255, 157, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border: 1px solid #00ff9d;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: "Rajdhani", sans-serif;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorTrail"></div>
+    <div class="nav-tooltip" id="tooltip"></div>
+    <div class="toast" id="toast">Code copied to clipboard!</div>
+    <canvas id="bg-stars"></canvas>
+
+    <div class="scene">
+        <div class="nav-wrapper">
+            <!-- BRAND -->
+            <div class="brand"><a href="../../../index.html" class="brand-link">FEZAcademy</a></div>
+            <nav class="nav-capsule">
+                <div class="nav-items">
+                    <a href="../../../index.html" class="nav-item" data-label="Hub Central" data-t="nav_home">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg></div>
+                        <span class="nav-label" data-t="nav_home">Home</span>
+                    </a>
+                    <a href="../gaming/index.html" class="nav-item" data-label="Gaming Nexus" data-t="gaming_title">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6 12h4m12 0a8 8 0 11-16 0 8 8 0 0116 0zM15 15l2 2m-2-2l2-2"/></svg></div>
+                        <span class="nav-label">Gaming</span>
+                    </a>
+                    <a href="../coding/index.html" class="nav-item" data-label="Dev Sanctuary" data-t="coding_title">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3L2 8l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                        <span class="nav-label">Coding</span>
+                    </a>
+                    <a href="../updates/index.html" class="nav-item" data-label="Sector Log" data-t="nav_updates">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                        <span class="nav-label" data-t="nav_updates">Updates</span>
+                    </a>
+                    <div class="nav-divider"></div>
+                    <div class="nav-item" id="settingsTrigger" data-label="Settings" data-t="nav_settings">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33-1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+                        <span class="nav-label" data-t="nav_settings" data-t="nav_settings">Settings</span>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="main-content">
+                <section class="hero-section">
+                    <h1 class="hero-title" data-t="sheets_title">Sheets Hub</h1>
+                    <p class="hero-subtitle">Discover beautiful and interactive digital experiences.</p>
+                </section>
+
+                <div class="sheets-grid">
+                    <!-- THE ROMANTIC PAGE -->
+                    <div class="sheet-card">
+                        <div class="sheet-icon">❤️</div>
+                        <h3>Felix & Jasmin</h3>
+                        <p>A romantic animated tribute with pulsing hearts and floating compliments.</p>
+                        <div class="card-actions">
+                            <a href="jasmin.html" class="action-btn view-btn">View</a>
+                            <button onclick="copyCode('jasmin.html')" class="action-btn copy-btn">Copy Code</button>
+                        </div>
+                    </div>
+
+                    <!-- GALAXY PAGE -->
+                    <div class="sheet-card">
+                        <div class="sheet-icon">🌌</div>
+                        <h3>Cosmic Serenity</h3>
+                        <p>A calming, interactive particle galaxy that follows your guidance.</p>
+                        <div class="card-actions">
+                            <a href="galaxy.html" class="action-btn view-btn">View</a>
+                            <button onclick="copyCode('galaxy.html')" class="action-btn copy-btn">Copy Code</button>
+                        </div>
+                    </div>
+
+                    <!-- AFFIRMATIONS PAGE -->
+                    <div class="sheet-card">
+                        <div class="sheet-icon">🔮</div>
+                        <h3>Oracle of Positivity</h3>
+                        <p>An interactive glowing orb that gives positive affirmations when clicked.</p>
+                        <div class="card-actions">
+                            <a href="affirmations.html" class="action-btn view-btn">View</a>
+                            <button onclick="copyCode('affirmations.html')" class="action-btn copy-btn">Copy Code</button>
+                        </div>
+                    </div>
+
+
+                    <!-- Particle Text Animation -->
+                    <div class="sheet-card">
+                        <div class="sheet-icon">🔮</div>
+                        <h3>Particle Text Animation</h3>
+                        <p>An interactive text animation that responds to user input.</p>
+                        <div class="card-actions">
+                            <a href="particle-text.html" class="action-btn view-btn">View</a>
+                            <button onclick="copyCode('particle-text.html')" class="action-btn copy-btn">Copy Code</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-nav">
+                    <a href="../../../index.html" class="glow-button" style="text-decoration: none; display: inline-block;">Return Home</a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../js/core.js"></script>
+    <script>
+        async function copyCode(filename) {
+            try {
+                const response = await fetch(filename);
+                const code = await response.text();
+                await navigator.clipboard.writeText(code);
+                
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            } catch (err) {
+                console.error('Failed to copy code:', err);
+                alert('Failed to copy code. Please try again.');
+            }
+        }
+    </script>
+</body>
+
+</html>

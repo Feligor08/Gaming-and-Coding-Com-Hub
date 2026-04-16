@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Update Hinzufügen | FEZAcademy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <a href="index.html" class="back-link">&larr; Zurück zum Update Log</a>
+            <h1>Update Hinzufügen</h1>
+            <p>Admin Bereich zur Eintragung neuer Updates.</p>
+        </header>
+        
+        <main>
+            <div class="admin-card">
+                <form id="admin-form">
+                    <div class="form-group">
+                        <label for="version">Version (z.B. 1.0.1)</label>
+                        <input type="text" id="version" required placeholder="1.0.1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Datum</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="changes">Änderungen (Eine pro Zeile)</label>
+                        <textarea id="changes" rows="6" required placeholder="- Feature 1 hinzugefügt&#10;- Bug XY behoben"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Admin Passwort</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submit-btn">Update Speichern</button>
+                    
+                    <div id="status-message" class="message"></div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

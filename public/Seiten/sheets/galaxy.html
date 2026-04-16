@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Serenity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050510;
+            --text-color: #e0e0ff;
+            --accent-glow: rgba(100, 200, 255, 0.4);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-color);
+        }
+
+        #cosmos {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .center-text h1 {
+            font-weight: 300;
+            font-size: 3rem;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            animation: breathe 8s infinite alternate ease-in-out;
+        }
+
+        .center-text p {
+            font-weight: 300;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            letter-spacing: 2px;
+        }
+
+        @keyframes breathe {
+            0% { transform: scale(0.98); opacity: 0.8; }
+            100% { transform: scale(1.02); opacity: 1; text-shadow: 0 0 40px var(--accent-glow); }
+        }
+
+        .interaction-hint {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.5;
+            z-index: 10;
+            letter-spacing: 1px;
+            animation: pulse-op 3s infinite;
+        }
+
+        @keyframes pulse-op {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Back Button */
+        .btn-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="btn-back">← Zurück / Back</a>
+
+    <canvas id="cosmos"></canvas>
+
+    <div class="center-text">
+        <h1>Breathe.</h1>
+        <p>You are part of the universe.</p>
+    </div>
+
+    <div class="interaction-hint">Move your mouse to guide the stars</div>
+
+    <script>
+        const canvas = document.getElementById('cosmos');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+
+        function initData() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            const numParticles = Math.floor((width * height) / 8000);
+            
+            for(let i=0; i<numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        window.addEventListener('resize', initData);
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.color = `hsla(${200 + Math.random()*60}, 100%, ${70 + Math.random()*30}%, ${Math.random() * 0.8 + 0.2})`;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx, dy, distance;
+                if(mouse.x != null) {
+                    dx = mouse.x - this.x;
+                    dy = mouse.y - this.y;
+                    distance = Math.sqrt(dx*dx + dy*dy);
+                } else {
+                    distance = 9999;
+                }
+
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if(distance < mouse.radius) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    // Return slowly to base
+                    if(this.x !== this.baseX) {
+                        let dxBase = this.x - this.baseX;
+                        this.x -= dxBase/20;
+                    }
+                    if(this.y !== this.baseY) {
+                        let dyBase = this.y - this.baseY;
+                        this.y -= dyBase/20;
+                    }
+                }
+                
+                // Slow drift
+                this.baseX += (Math.random() - 0.5) * 0.5;
+                this.baseY += (Math.random() - 0.5) * 0.5;
+                
+                if(this.baseX < 0 || this.baseX > width) this.baseX = Math.random() * width;
+                if(this.baseY < 0 || this.baseY > height) this.baseY = Math.random() * height;
+
+                this.draw();
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw connections
+            /* Uncomment for network effect
+            for(let a = 0; a < particles.length; a++) {
+                for(let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 50) {
+                        ctx.strokeStyle = `rgba(100, 200, 255, ${1 - dist/50})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            */
+            
+            for(let i=0; i<particles.length; i++) {
+                particles[i].update();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        initData();
+        animate();
+    </script>
+</body>
+</html>

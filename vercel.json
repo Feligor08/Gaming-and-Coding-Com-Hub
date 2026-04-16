@@ -1,0 +1,22 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/gaming", "destination": "/public/Seiten/gaming/index.html" },
+    { "source": "/gaming/tournaments", "destination": "/public/Seiten/gaming/tournaments/index.html" },
+    { "source": "/gaming/servers", "destination": "/public/Seiten/gaming/servers/index.html" },
+    { "source": "/gaming/leaderboards", "destination": "/public/Seiten/gaming/leaderboards/index.html" },
+    { "source": "/gaming/news", "destination": "/public/Seiten/gaming/news/index.html" },
+    { "source": "/coding", "destination": "/public/Seiten/coding/index.html" },
+    { "source": "/coding/challenges", "destination": "/public/Seiten/coding/challenges/index.html" },
+    { "source": "/coding/projects", "destination": "/public/Seiten/coding/projects/index.html" },
+    { "source": "/coding/resources", "destination": "/public/Seiten/coding/resources/index.html" },
+    { "source": "/coding/training", "destination": "/public/Seiten/coding/training/index.html" },
+    { "source": "/community", "destination": "/public/Seiten/community/index.html" },
+    { "source": "/community/members", "destination": "/public/Seiten/community/members/index.html" },
+    { "source": "/sheets", "destination": "/public/Seiten/sheets/index.html" },
+    { "source": "/login", "destination": "/public/Seiten/login/index.html" },
+    { "source": "/register", "destination": "/public/Seiten/register/index.html" },
+    { "source": "/updates", "destination": "/public/Seiten/updates/index.html" }
+  ],
+  "cleanUrls": true
+}

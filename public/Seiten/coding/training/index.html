@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FEZAcademy — Training Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/global.css">
+    <style>
+        .sub-content { width: 100%; max-width: 1200px; padding: 120px 20px 40px; animation: fadeIn 1s ease; }
+        .training-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .hero-mini { text-align: center; margin-bottom: 60px; }
+        .hero-mini h1 { font-family: "Orbitron", sans-serif; font-size: 2.5rem; background: linear-gradient(to right, #fff, var(--neon-cyan), var(--neon-violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .progress-bar-container { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin: 15px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); width: 0%; transition: width 1s ease; }
+    </style>
+</head>
+<body>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-ring" id="cursorTrail"></div>
+    <div class="nav-tooltip" id="tooltip"></div>
+    <canvas id="bg-stars"></canvas>
+    
+    <div class="scene">
+        <div class="nav-wrapper">
+            <div class="brand"><a href="../../../../index.html" class="brand-link">FEZAcademy</a></div>
+            <nav class="nav-capsule">
+                <div class="nav-items">
+                    <a href="../../../../index.html" class="nav-item" data-label="Hub Central" data-t="nav_home">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/></svg></div>
+                        <span class="nav-label" data-t="nav_home">Home</span>
+                    </a>
+                    <a href="../../gaming/index.html" class="nav-item" data-label="Gaming Nexus" data-t="gaming_title">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M6 12h4m12 0a8 8 0 11-16 0 8 8 0 0116 0zM15 15l2 2m-2-2l2-2"/></svg></div>
+                        <span class="nav-label">Gaming</span>
+                    </a>
+                    <a href="../index.html" class="nav-item active" data-label="Dev Sanctuary" data-t="coding_title">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 3L2 8l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+                        <span class="nav-label">Coding</span>
+                    </a>
+                    <a href="../../updates/index.html" class="nav-item" data-label="Sector Log" data-t="nav_updates">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+                        <span class="nav-label" data-t="nav_updates">Updates</span>
+                    </a>
+                    <div class="nav-divider"></div>
+                    <div class="nav-item" id="settingsTrigger" data-label="Settings" data-t="nav_settings">
+                        <div class="nav-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33-1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+                        <span class="nav-label" data-t="nav_settings">Settings</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <main class="sub-content">
+            <div class="hero-mini">
+                <h1 data-t="training_title">Neural Training Core</h1>
+                <p>Downloading knowledge to your neural net.</p>
+            </div>
+
+            <div class="training-grid">
+                <div class="glass-card">
+                    <h3>Sub-Space Logic</h3>
+                    <p>Understanding non-linear processing.</p>
+                    <div class="progress-bar-container"><div class="progress-fill" style="width: 65%;"></div></div>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Progress: 65%</p>
+                    <button class="glow-button" style="width: 100%; margin-top: 15px;">Continue Lab</button>
+                </div>
+
+                <div class="glass-card">
+                    <h3>Temporal Arch v4</h3>
+                    <p>Managing state across timelines.</p>
+                    <div class="progress-bar-container"><div class="progress-fill" style="width: 12%;"></div></div>
+                    <p style="font-size: 0.8rem; color: var(--text-dim);">Progress: 12%</p>
+                    <button class="glow-button" style="width: 100%; margin-top: 15px;">Initiate</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Panel (Dynamic) -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <h2 data-t="settings_title">Control Center</h2>
+            <button class="close-settings" id="closeSettings">×</button>
+        </div>
+        <div class="settings-body">
+            <div class="setting-group">
+                <label data-t="settings_theme">Visual Mode</label>
+                <input type="checkbox" id="themeToggle">
+            </div>
+            <div class="setting-group">
+                <label data-t="settings_lang">Core Language</label>
+                <div class="lang-switch" style="display:flex;gap:10px;">
+                    <button class="lang-btn" data-lang="de">DE</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/core.js"></script>
+</body>
+</html>

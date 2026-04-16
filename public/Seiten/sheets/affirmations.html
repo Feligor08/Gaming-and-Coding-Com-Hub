@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Affirmations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --orb-color: #38bdf8;
+            --orb-glow: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-accent: #7dd3fc;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1e293b 0%, var(--bg-dark) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Lora', serif;
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        .title {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--text-accent);
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+            text-align: center;
+        }
+
+        .orb-container {
+            position: relative;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        .orb {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #fff 0%, var(--orb-color) 40%, rgba(14, 165, 233, 0.8) 80%, rgba(2, 132, 199, 0.9) 100%);
+            box-shadow: 
+                inset -20px -20px 40px rgba(0,0,0,0.5),
+                inset 10px 10px 30px rgba(255,255,255,0.4),
+                0 0 50px var(--orb-glow),
+                0 0 100px rgba(56, 189, 248, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .orb::after {
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .orb:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 
+                inset -20px -20px 40px rgba(0,0,0,0.5),
+                inset 10px 10px 30px rgba(255,255,255,0.4),
+                0 0 70px var(--orb-glow),
+                0 0 150px rgba(56, 189, 248, 0.5);
+        }
+
+        .orb.shaking {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            filter: brightness(1.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-5px, 0, 0) scale(1.05); }
+            20%, 80% { transform: translate3d(5px, 0, 0) scale(1.05); }
+            30%, 50%, 70% { transform: translate3d(-10px, 0, 0) scale(1.05); }
+            40%, 60% { transform: translate3d(10px, 0, 0) scale(1.05); }
+        }
+
+        .message-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+            border: 2px solid rgba(56, 189, 248, 0.3);
+            z-index: 10;
+        }
+
+        .message-box.visible {
+            opacity: 1;
+        }
+
+        .message-text {
+            font-size: 1.1rem;
+            color: #bae6fd;
+            text-shadow: 0 0 5px #38bdf8;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .hint {
+            margin-top: 3rem;
+            font-size: 1.1rem;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Back Button */
+        .btn-back {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: var(--text-accent);
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+
+        /* Ambient particles */
+        .ambient-light {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(56,189,248,0.8) 0%, transparent 70%);
+            pointer-events: none;
+            animation: float-particle linear infinite;
+        }
+
+        @keyframes float-particle {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+    <a href="index.html" class="btn-back">← Return</a>
+
+    <h1 class="title">Oracle of Positivity</h1>
+
+    <div class="orb-container" id="orbContainer">
+        <div class="orb" id="orb">
+            <div class="message-box" id="messageBox">
+                <div class="message-text" id="messageText">Click to reveal</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hint">Click the orb</div>
+
+    <script>
+        const affirmations = [
+            "Du bist stark und fähig.",
+            "Jeder Tag ist ein neuer Anfang.",
+            "Dein Potenzial ist grenzenlos.",
+            "Vertraue dem Prozess.",
+            "Du machst einen Unterschied.",
+            "Atme tief ein. Alles wird gut.",
+            "Glaube an dich selbst.",
+            "Du ziehst Positivität an.",
+            "Deine Ideen sind wertvoll.",
+            "Du bist auf dem richtigen Weg.",
+            "You are strong and capable.",
+            "Every day is a new beginning.",
+            "Your potential is limitless.",
+            "Trust the process.",
+            "You make a difference.",
+            "Breathe deeply. All is well.",
+            "Believe in yourself.",
+            "You attract positivity.",
+            "Your ideas have value.",
+            "You are exactly where you need to be."
+        ];
+
+        const orbContainer = document.getElementById('orbContainer');
+        const orb = document.getElementById('orb');
+        const messageBox = document.getElementById('messageBox');
+        const messageText = document.getElementById('messageText');
+        
+        let isRevealed = false;
+        let isAnimating = false;
+
+        orbContainer.addEventListener('click', () => {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            
+            // Hide current message if any
+            if (isRevealed) {
+                messageBox.classList.remove('visible');
+            }
+
+            // Shake the orb
+            orb.classList.add('shaking');
+            
+            setTimeout(() => {
+                orb.classList.remove('shaking');
+                
+                // Get random affirmation
+                const randomIndex = Math.floor(Math.random() * affirmations.length);
+                messageText.textContent = affirmations[randomIndex];
+                
+                // Show message
+                messageBox.classList.add('visible');
+                isRevealed = true;
+                isAnimating = false;
+            }, 600); // Wait for shake animation to mostly finish
+        });
+
+        // Add 3D tilt effect based on mouse movement
+        document.addEventListener('mousemove', (e) => {
+            if(isAnimating) return;
+            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            orb.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Reset transform on mouse leave
+        document.addEventListener('mouseleave', () => {
+            orb.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+
+        // Create ambient light particles
+        function createAmbientLight() {
+            const light = document.createElement('div');
+            light.className = 'ambient-light';
+            
+            const size = Math.random() * 8 + 2;
+            light.style.width = `${size}px`;
+            light.style.height = `${size}px`;
+            
+            light.style.left = `${Math.random() * window.innerWidth}px`;
+            
+            const duration = Math.random() * 10 + 5;
+            light.style.animationDuration = `${duration}s`;
+            
+            document.body.appendChild(light);
+            
+            setTimeout(() => {
+                light.remove();
+            }, duration * 1000);
+        }
+
+        setInterval(createAmbientLight, 400);
+
+    </script>
+</body>
+</html>
